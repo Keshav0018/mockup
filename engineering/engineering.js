@@ -80,6 +80,12 @@
   const cDot = document.getElementById('cursor');
   const cRing = document.getElementById('cursor-ring');
 
+  // Spec callouts
+  const callout1 = document.getElementById('callout-1');
+  const callout2 = document.getElementById('callout-2');
+  const callout3 = document.getElementById('callout-3');
+  const callout4 = document.getElementById('callout-4');
+
   /* ── CURSOR ─────────────────────────────────────────── */
   let mx = innerWidth / 2, my = innerHeight / 2;
   let rx = mx, ry = my;
@@ -356,6 +362,64 @@
     }
 
     updateHUD(p);
+    updateCallouts(p);
+  }
+
+  /* ── SPEC CALLOUT ANIMATIONS ────────────────────────── */
+  //
+  // Each callout appears during a specific assembly phase.
+  // ALL callouts finish before the car is fully built (~70%).
+  // No specs shown after completion — clean reveal.
+  //
+  //  Callout 1: 12–28%  (Chassis emerging — Aluminium-Steel body)
+  //  Callout 2: 26–44%  (Components — 3.7L Flat-6 engine)
+  //  Callout 3: 42–58%  (Body panels — PTM AWD drivetrain)
+  //  Callout 4: 56–68%  (Near-complete — Performance stats)
+  //
+  function updateCallouts(p) {
+    animateCallout(callout1, p, 0.12, 0.28);
+    animateCallout(callout2, p, 0.26, 0.44);
+    animateCallout(callout3, p, 0.42, 0.58);
+    animateCallout(callout4, p, 0.56, 0.68);
+  }
+
+  function animateCallout(el, p, start, end) {
+    if (!el) return;
+    const fadeIn = 0.06;   // 6% of scroll to fade in
+    const fadeOut = 0.06;  // 6% of scroll to fade out
+
+    let opacity = 0;
+    let ty = 12;
+
+    if (p >= start && p <= end) {
+      // Fade in
+      if (p < start + fadeIn) {
+        const t = ss(range(p, start, start + fadeIn));
+        opacity = t;
+        ty = lerp(12, 0, t);
+      }
+      // Full visible
+      else if (p <= end - fadeOut) {
+        opacity = 1;
+        ty = 0;
+      }
+      // Fade out
+      else {
+        const t = ss(range(p, end - fadeOut, end));
+        opacity = 1 - t;
+        ty = lerp(0, -8, t);
+      }
+    }
+
+    set(el, 'opacity', f(opacity));
+    set(el, 'transform', `translateY(${ty.toFixed(1)}px)`);
+
+    // Toggle .active for the accent line animation
+    if (opacity > 0.3) {
+      if (!el.classList.contains('active')) el.classList.add('active');
+    } else {
+      if (el.classList.contains('active')) el.classList.remove('active');
+    }
   }
 
   /* tiny helpers */
@@ -394,5 +458,100 @@
   }
 
   tick();
+
+  /* ── NAV LIGHT/DARK TOGGLE ─────────────────────────────
+     When the assembly reaches the bright/white phase,
+     toggle .nav-light on the nav bar so it stays visible.
+  ──────────────────────────────────────────────────────── */
+  const nav = document.getElementById('nav');
+  let navIsLight = false;
+
+  function updateNavTheme(p) {
+    // Background turns white around 70%+ scroll
+    const shouldBeLight = p >= 0.70;
+    if (shouldBeLight !== navIsLight) {
+      navIsLight = shouldBeLight;
+      if (nav) nav.classList.toggle('nav-light', shouldBeLight);
+    }
+  }
+
+  // Hook into the existing scroll listener
+  const origTick = tick;
+  // We'll patch updateOverlays to also call updateNavTheme
+  const _origUpdateOverlays = updateOverlays;
+  // Actually, let's just use a scroll listener
+  window.addEventListener('scroll', () => {
+    const maxScroll = track.scrollHeight - innerHeight;
+    const p = clamp(maxScroll > 0 ? scrollY / maxScroll : 0, 0, 1);
+    updateNavTheme(p);
+  }, { passive: true });
+
+  /* ── SPEC COUNT-UP FOR #after-hero ─────────────────────
+     Reads existing numbers from .spec-number text nodes,
+     zeros them, counts up when scrolled into view.
+  ──────────────────────────────────────────────────────── */
+
+  const engSpecNumbers = document.querySelectorAll('#after-hero .spec-number');
+  const engSpecData = [];
+
+  engSpecNumbers.forEach((el) => {
+    const unitSpan = el.querySelector('.spec-unit');
+    const raw = el.textContent.replace(unitSpan ? unitSpan.textContent : '', '').trim();
+    const target = parseFloat(raw);
+    const decimals = raw.includes('.') ? (raw.split('.')[1] || '').length : 0;
+
+    engSpecData.push({ el, unitSpan, target, decimals });
+
+    if (unitSpan) {
+      el.textContent = '';
+      el.appendChild(document.createTextNode('0'));
+      el.appendChild(unitSpan);
+    } else {
+      el.textContent = '0';
+    }
+  });
+
+  function engCountUp(idx) {
+    const { el, unitSpan, target, decimals } = engSpecData[idx];
+    const duration = 1500;
+    const startTime = performance.now();
+    const easeOut = t => 1 - (1 - t) ** 4;
+
+    function step(now) {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const value = easeOut(progress) * target;
+      const display = decimals > 0 ? value.toFixed(decimals) : Math.round(value);
+
+      if (unitSpan) {
+        el.textContent = '';
+        el.appendChild(document.createTextNode(String(display)));
+        el.appendChild(unitSpan);
+      } else {
+        el.textContent = String(display);
+      }
+
+      if (progress < 1) requestAnimationFrame(step);
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  if (engSpecNumbers.length) {
+    let engSpecsDone = false;
+    const engSpecsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !engSpecsDone) {
+          engSpecsDone = true;
+          engSpecData.forEach((_, i) => {
+            setTimeout(() => engCountUp(i), i * 150);
+          });
+          engSpecsObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const afterHero = document.getElementById('after-hero');
+    if (afterHero) engSpecsObserver.observe(afterHero);
+  }
 
 })();

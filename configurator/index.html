@@ -25,6 +25,9 @@
     }
   }
   </script>
+
+    <!-- Model Viewer for AR -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 
 <body>
@@ -97,6 +100,15 @@
                         </svg>
                         <span>Reset</span>
                     </button>
+                    <button class="ctrl-btn" id="btn-ar" title="View in AR">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M12 3L2 8l10 5 10-5-10-5z" />
+                            <path d="M2 8v8l10 5 10-5V8" />
+                            <path d="M12 13v8" />
+                        </svg>
+                        <span>AR View</span>
+                    </button>
                 </div>
             </div>
         </aside>
@@ -155,6 +167,35 @@
             </div>
         </div>
     </footer>
+
+    <!-- Hidden model-viewer for AR activation -->
+    <model-viewer
+        id="ar-model"
+        src="../models/porsche_911_interior.glb"
+        ar
+        ar-modes="webxr scene-viewer quick-look"
+        ar-scale="auto"
+        camera-controls
+        shadow-intensity="1"
+        style="position:fixed; width:1px; height:1px; opacity:0; pointer-events:none; top:-9999px;"
+    ></model-viewer>
+
+    <!-- AR Unsupported Modal -->
+    <div id="ar-modal" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); align-items:center; justify-content:center;">
+        <div style="background:rgba(18,19,22,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:2.5rem; max-width:380px; text-align:center; font-family:'Barlow',sans-serif;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="1.5" style="margin-bottom:1rem;">
+                <path d="M12 3L2 8l10 5 10-5-10-5z"/>
+                <path d="M2 8v8l10 5 10-5V8"/>
+                <path d="M12 13v8"/>
+            </svg>
+            <h3 style="font-family:'Orbitron',sans-serif; font-size:1.1rem; color:#fff; margin-bottom:0.8rem;">AR Not Available</h3>
+            <p style="font-size:0.85rem; color:rgba(255,255,255,0.6); line-height:1.6; margin-bottom:1.5rem;">
+                Augmented Reality requires a supported mobile device.<br>
+                Open this page on your <strong style="color:#c0392b;">phone or tablet</strong> to place the Porsche in your space.
+            </p>
+            <button onclick="document.getElementById('ar-modal').style.display='none'" style="padding:0.6em 1.8em; font-family:'Barlow',sans-serif; font-size:0.75rem; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:#fff; background:rgba(192,57,43,0.85); border:1px solid rgba(192,57,43,0.5); border-radius:24px; cursor:pointer;">Got it</button>
+        </div>
+    </div>
 
     <script type="module" src="app.js"></script>
 </body>

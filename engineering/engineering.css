@@ -128,13 +128,19 @@
     opacity: 0;
     pointer-events: none;
     will-change: transform, opacity;
-    max-width: 420px;
+    max-width: 440px;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    padding: 2rem 2.2rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 #eyebrow {
     font-family: 'Barlow', sans-serif;
-    font-size: 0.6rem;
-    font-weight: 500;
+    font-size: 0.7rem;
+    font-weight: 600;
     letter-spacing: 0.32em;
     text-transform: uppercase;
     color: var(--red);
@@ -142,6 +148,7 @@
     display: flex;
     align-items: center;
     gap: 0.8rem;
+    text-shadow: 0 0 20px rgba(192, 57, 43, 0.4);
 }
 
 #eyebrow::before {
@@ -155,11 +162,11 @@
 
 #headline {
     font-family: 'Orbitron', sans-serif;
-    font-size: clamp(2.4rem, 4.8vw, 6rem);
+    font-size: clamp(2.2rem, 4.2vw, 5rem);
     font-weight: 900;
-    line-height: 0.90;
+    line-height: 0.95;
     letter-spacing: -0.035em;
-    color: var(--text-pri);
+    color: #ffffff;
     text-transform: uppercase;
     margin-bottom: 1.4rem;
 }
@@ -171,13 +178,13 @@
 
 #subline {
     font-family: 'Barlow', sans-serif;
-    font-size: clamp(0.76rem, 1vw, 0.92rem);
+    font-size: clamp(0.82rem, 1.05vw, 0.95rem);
     font-weight: 400;
     font-style: italic;
     letter-spacing: 0.04em;
-    color: rgba(10, 10, 10, 0.85);
+    color: rgba(255, 255, 255, 0.82);
     line-height: 1.75;
-    margin-bottom: 2.6rem;
+    margin-bottom: 2.2rem;
 }
 
 /* ── CTA Button ────────────────────────────────────────────── */
@@ -366,6 +373,89 @@
     display: block;
     line-height: 1;
     margin-bottom: 0.2rem;
+}
+
+/* ── Scroll-Synced Spec Callouts ──────────────────────────── */
+.spec-callout {
+    position: absolute;
+    z-index: 28;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(14px);
+    will-change: opacity, transform;
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+}
+
+.callout-line {
+    width: 3px;
+    height: auto;
+    background: var(--red);
+    flex-shrink: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 2px;
+}
+
+.spec-callout.active .callout-line {
+    transform: scaleY(1);
+}
+
+/* Dark-phase callouts (1 & 2) — dark glass */
+.callout-content {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: none;
+    border-radius: 0 5px 5px 0;
+    padding: 1rem 1.4rem;
+    min-width: 180px;
+}
+
+.callout-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1rem, 1.5vw, 1.35rem);
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    margin-bottom: 0.3rem;
+}
+
+.callout-label {
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--red);
+}
+
+/* All callouts use dark glass — they all appear during assembly (dark phase) */
+
+/* Callout positions — framed around the car */
+#callout-1 {
+    right: 5%;
+    top: 28%;
+}
+
+#callout-2 {
+    left: 5%;
+    bottom: 22%;
+}
+
+#callout-3 {
+    right: 5%;
+    bottom: 22%;
+}
+
+#callout-4 {
+    left: 5%;
+    top: 28%;
 }
 
 /* ── After Hero ────────────────────────────────────────────── */

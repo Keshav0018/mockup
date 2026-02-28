@@ -103,7 +103,8 @@ const w = viewerWrap.clientWidth || 800;
 const h = viewerWrap.clientHeight || 500;
 
 const camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
-camera.position.set(carData.cameraPos.x, carData.cameraPos.y, carData.cameraPos.z);
+// Start ultra-zoomed on the car body — dramatic reveal
+camera.position.set(0.8, 0.6, 1.0);
 
 const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -125,11 +126,11 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.enablePan = false;
 controls.enableZoom = true;
-controls.minDistance = 3;
+controls.minDistance = 1.5;
 controls.maxDistance = 14;
 controls.target.set(0, 0.8, 0);
 controls.maxPolarAngle = Math.PI / 2 + 0.1;
-controls.autoRotate = true;
+controls.autoRotate = false; // start still, enable after sweep
 controls.autoRotateSpeed = 0.5;
 
 /* ── LIGHTING ────────────────────────────────────────── */
@@ -237,6 +238,33 @@ gltfLoader.load(
         }
 
         console.log(`[Configurator] Body meshes found: ${bodyMeshes.length}`);
+
+        // ── Cinematic camera sweep: close → normal ──
+        const sweepFrom = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+        const sweepTo = carData.cameraPos;
+        const sweepDuration = 120; // frames — longer for dramatic effect
+        let sweepFrame = 0;
+
+        function sweepCamera() {
+            sweepFrame++;
+            const t = Math.min(1, sweepFrame / sweepDuration);
+            const ease = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+            camera.position.x = sweepFrom.x + (sweepTo.x - sweepFrom.x) * ease;
+            camera.position.y = sweepFrom.y + (sweepTo.y - sweepFrom.y) * ease;
+            camera.position.z = sweepFrom.z + (sweepTo.z - sweepFrom.z) * ease;
+
+            if (sweepFrame < sweepDuration) {
+                requestAnimationFrame(sweepCamera);
+            } else {
+                // Enable auto-rotate once the sweep finishes
+                controls.autoRotate = true;
+                const rotateBtn = document.getElementById('btn-rotate');
+                if (rotateBtn) rotateBtn.classList.add('active');
+            }
+        }
+        // Start sweep after a brief pause
+        setTimeout(sweepCamera, 800);
     },
     (progress) => {
         if (progress.total > 0) {
@@ -435,6 +463,147 @@ function initUI() {
         }
         animateReset();
     });
+
+    // AR button
+    const arBtn = document.getElementById('btn-ar');
+    arBtn.addEventListener('click', () => {
+        const arModel = document.getElementById('ar-model');
+        
+        if (arModel && arModel.canActivateAR) {
+            // Device supports AR — activate it
+            arModel.activateAR();
+            console.log('[Configurator] AR session activated');
+        } else {
+            // Show unsupported modal
+            const modal = document.getElementById('ar-modal');
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+            console.log('[Configurator] AR not supported on this device');
+        }
+    });
 }
 
 initUI();
+
+/* ── CLICK-TO-ENTER INTERIOR ────────────────────────── */
+let isInterior = false;
+let isAnimatingView = false;
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+// Interior camera position (inside the cockpit)
+const interiorPos = { x: 0, y: 1.1, z: 0.3 };
+const interiorTarget = { x: 0, y: 1.0, z: -2 }; // looking forward through windshield
+
+// Create exit button (hidden initially)
+const exitBtn = document.createElement('button');
+exitBtn.id = 'exit-interior-btn';
+exitBtn.textContent = '← Exit Interior';
+exitBtn.style.cssText = `
+    position: fixed;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    padding: 0.7em 1.8em;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #fff;
+    background: rgba(192, 57, 43, 0.85);
+    border: 1px solid rgba(192, 57, 43, 0.6);
+    border-radius: 30px;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, background 0.3s ease;
+    backdrop-filter: blur(8px);
+`;
+document.body.appendChild(exitBtn);
+
+exitBtn.addEventListener('mouseenter', () => { exitBtn.style.background = 'rgba(192, 57, 43, 1)'; });
+exitBtn.addEventListener('mouseleave', () => { exitBtn.style.background = 'rgba(192, 57, 43, 0.85)'; });
+
+function animateCameraTo(targetCamPos, targetLookAt, duration, onComplete) {
+    if (isAnimatingView) return;
+    isAnimatingView = true;
+
+    const startPos = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+    const startTarget = { x: controls.target.x, y: controls.target.y, z: controls.target.z };
+    let frame = 0;
+
+    function step() {
+        frame++;
+        const t = Math.min(1, frame / duration);
+        const ease = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+        camera.position.x = startPos.x + (targetCamPos.x - startPos.x) * ease;
+        camera.position.y = startPos.y + (targetCamPos.y - startPos.y) * ease;
+        camera.position.z = startPos.z + (targetCamPos.z - startPos.z) * ease;
+
+        controls.target.x = startTarget.x + (targetLookAt.x - startTarget.x) * ease;
+        controls.target.y = startTarget.y + (targetLookAt.y - startTarget.y) * ease;
+        controls.target.z = startTarget.z + (targetLookAt.z - startTarget.z) * ease;
+
+        if (frame < duration) {
+            requestAnimationFrame(step);
+        } else {
+            isAnimatingView = false;
+            if (onComplete) onComplete();
+        }
+    }
+    step();
+}
+
+// Click on canvas → raycast → enter interior
+canvas.addEventListener('click', (e) => {
+    if (isInterior || isAnimatingView || !carModel) return;
+
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const hits = raycaster.intersectObject(carModel, true);
+
+    if (hits.length > 0) {
+        isInterior = true;
+        controls.autoRotate = false;
+        const rotateBtn = document.getElementById('btn-rotate');
+        if (rotateBtn) rotateBtn.classList.remove('active');
+
+        // Animate into the cockpit
+        animateCameraTo(interiorPos, interiorTarget, 75, () => {
+            controls.minDistance = 0.1;
+            controls.maxDistance = 2;
+            controls.enablePan = true;
+            // Show exit button
+            exitBtn.style.opacity = '1';
+            exitBtn.style.pointerEvents = 'auto';
+        });
+    }
+});
+
+// Exit interior
+exitBtn.addEventListener('click', () => {
+    if (!isInterior || isAnimatingView) return;
+
+    exitBtn.style.opacity = '0';
+    exitBtn.style.pointerEvents = 'none';
+
+    const exteriorTarget = { x: 0, y: carModel ? new THREE.Box3().setFromObject(carModel).getSize(new THREE.Vector3()).y * 0.4 : 0.8, z: 0 };
+
+    animateCameraTo(carData.cameraPos, exteriorTarget, 75, () => {
+        isInterior = false;
+        controls.minDistance = 1.5;
+        controls.maxDistance = 14;
+        controls.enablePan = false;
+        controls.autoRotate = true;
+        const rotateBtn = document.getElementById('btn-rotate');
+        if (rotateBtn) rotateBtn.classList.add('active');
+    });
+});
+

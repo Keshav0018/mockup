@@ -377,7 +377,7 @@
   background: #030303;
   border-top: 1px solid rgba(255, 255, 255, 0.04);
   padding: 5rem 7% 2.5rem;
-  color: rgba(240, 237, 232, 0.55);
+  color: rgba(240, 237, 232, 0.7);
   font-family: 'Barlow', sans-serif;
 }
 
@@ -417,7 +417,7 @@
   font-weight: 300;
   font-style: italic;
   letter-spacing: 0.06em;
-  color: rgba(240, 237, 232, 0.3);
+  color: rgba(240, 237, 232, 0.5);
 }
 
 /* ── Nav Grid ─────────────────────────────────────────────── */
@@ -449,7 +449,7 @@
   font-size: 0.7rem;
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: rgba(240, 237, 232, 0.4);
+  color: rgba(240, 237, 232, 0.6);
   text-decoration: none;
   transition: color 0.25s ease;
 }
@@ -478,7 +478,7 @@
 }
 
 .footer-social a {
-  color: rgba(240, 237, 232, 0.3);
+  color: rgba(240, 237, 232, 0.5);
   transition: color 0.25s ease, transform 0.2s ease;
   display: flex;
 }
@@ -492,7 +492,7 @@
   font-size: 0.6rem;
   font-weight: 400;
   letter-spacing: 0.08em;
-  color: rgba(240, 237, 232, 0.2);
+  color: rgba(240, 237, 232, 0.4);
 }
 
 /* ── Footer Responsive ────────────────────────────────────── */
