@@ -1,0 +1,226 @@
+<!-- ═══════════════════════════════════════════════════════════
+     EXPLORE SECTION — 3D Interactive Car Showcase
+     Three.js + GSAP
+═══════════════════════════════════════════════════════════ -->
+<section id="explore-section">
+    <div class="explore-header">
+        <p class="section-eyebrow" id="explore-eyebrow">Explore the Lineup</p>
+        <h2 class="section-title" id="explore-title">Choose Your<br><span class="accent">Porsche.</span></h2>
+        <p class="explore-subtitle" id="explore-subtitle">
+            Interact with the 3D models — rotate, zoom, and click on individual
+            components to explore mechanical precision up close.
+        </p>
+    </div>
+
+    <div class="explore-interaction-hint">
+        <span class="hint-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path
+                    d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122M5.98 11.95l-2.121 2.122" />
+            </svg>
+        </span>
+        <span>Click &amp; drag to rotate • Scroll to zoom • Click parts to inspect</span>
+    </div>
+
+    <div class="explore-cards-grid">
+
+        <!-- ── Card 1: 911 Turbo S ─────────────────────────── -->
+        <div class="explore-card" data-car="car-1" id="explore-card-1">
+            <div class="card-glow" style="--accent: #c0392b;"></div>
+            <div class="card-viewer-wrap">
+                <div class="card-thumbnail-container" data-config-url="configurator/index.html?car=0">
+                    <img src="brand_assets/thumbnail_porsche_1.jpg" alt="911 Turbo S" class="card-thumbnail"
+                        onerror="this.src='https://placehold.co/800x500/111/444?text=911+Turbo+S'">
+                    <div class="thumbnail-overlay">
+                        <span class="thumbnail-btn">Configure in 3D →</span>
+                    </div>
+                </div>
+                <div class="viewer-container" id="viewer-car-1">
+                    <canvas class="viewer-canvas" aria-label="3D Model: Porsche 911 Turbo S"></canvas>
+                    <div class="viewer-loading">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-bar">
+                            <div class="loading-bar-fill"></div>
+                        </div>
+                        <span class="loading-pct">0%</span>
+                    </div>
+                </div>
+                <div class="viewer-tooltip"></div>
+                <div class="part-info-panel">
+                    <div class="part-name">—</div>
+                    <div class="part-vertices">—</div>
+                    <div class="part-material">—</div>
+                </div>
+            </div>
+            <div class="card-info">
+                <div class="card-info-top">
+                    <h3 class="card-car-name">911 Turbo S</h3>
+                    <p class="card-tagline">The icon. Reimagined.</p>
+                </div>
+                <div class="card-specs">
+                    <div class="card-spec"><strong>650</strong><span>hp</span></div>
+                    <div class="card-spec"><strong>2.7</strong><span>s</span></div>
+                    <div class="card-spec"><strong>330</strong><span>km/h</span></div>
+                </div>
+                <div class="card-actions">
+                    <button class="card-btn btn-rotate active" title="Toggle Auto Rotate">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 12a9 9 0 11-6.219-8.56" />
+                            <polyline points="21 3 21 9 15 9" />
+                        </svg>
+                    </button>
+                    <button class="card-btn btn-reset" title="Reset View">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="3" />
+                            <path d="M12 2v4m0 12v4M2 12h4m12 0h4" />
+                        </svg>
+                    </button>
+                    <button class="card-btn btn-fullscreen" title="Fullscreen">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="15 3 21 3 21 9" />
+                            <polyline points="9 21 3 21 3 15" />
+                            <line x1="21" y1="3" x2="14" y2="10" />
+                            <line x1="3" y1="21" x2="10" y2="14" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Card 2: 911 Carrera 4S ──────────────────────── -->
+        <div class="explore-card" data-car="car-2" id="explore-card-2">
+            <div class="card-glow" style="--accent: #e67e22;"></div>
+            <div class="card-viewer-wrap">
+                <div class="card-thumbnail-container" data-config-url="configurator/index.html?car=1">
+                    <img src="brand_assets/thumbnail_porsche_2.jpg" alt="911 Carrera 4S" class="card-thumbnail"
+                        onerror="this.src='https://placehold.co/800x500/111/444?text=911+Carrera+4S'">
+                    <div class="thumbnail-overlay">
+                        <span class="thumbnail-btn">Configure in 3D →</span>
+                    </div>
+                </div>
+                <div class="viewer-container" id="viewer-car-2">
+                    <canvas class="viewer-canvas" aria-label="3D Model: Porsche 911 Carrera 4S"></canvas>
+                    <div class="viewer-loading">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-bar">
+                            <div class="loading-bar-fill"></div>
+                        </div>
+                        <span class="loading-pct">0%</span>
+                    </div>
+                </div>
+                <div class="viewer-tooltip"></div>
+                <div class="part-info-panel">
+                    <div class="part-name">—</div>
+                    <div class="part-vertices">—</div>
+                    <div class="part-material">—</div>
+                </div>
+            </div>
+            <div class="card-info">
+                <div class="card-info-top">
+                    <h3 class="card-car-name">911 Carrera 4S</h3>
+                    <p class="card-tagline">Pure driving pleasure.</p>
+                </div>
+                <div class="card-specs">
+                    <div class="card-spec"><strong>450</strong><span>hp</span></div>
+                    <div class="card-spec"><strong>3.6</strong><span>s</span></div>
+                    <div class="card-spec"><strong>308</strong><span>km/h</span></div>
+                </div>
+                <div class="card-actions">
+                    <button class="card-btn btn-rotate active" title="Toggle Auto Rotate">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 12a9 9 0 11-6.219-8.56" />
+                            <polyline points="21 3 21 9 15 9" />
+                        </svg>
+                    </button>
+                    <button class="card-btn btn-reset" title="Reset View">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="3" />
+                            <path d="M12 2v4m0 12v4M2 12h4m12 0h4" />
+                        </svg>
+                    </button>
+                    <button class="card-btn btn-fullscreen" title="Fullscreen">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="15 3 21 3 21 9" />
+                            <polyline points="9 21 3 21 3 15" />
+                            <line x1="21" y1="3" x2="14" y2="10" />
+                            <line x1="3" y1="21" x2="10" y2="14" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Card 3: 911 GT3 RS ──────────────────────────── -->
+        <div class="explore-card" data-car="car-3" id="explore-card-3">
+            <div class="card-glow" style="--accent: #27ae60;"></div>
+            <div class="card-viewer-wrap">
+                <div class="card-thumbnail-container" data-config-url="configurator/index.html?car=2">
+                    <img src="brand_assets/thumbnail_porsche_3.jpg" alt="911 GT3 RS" class="card-thumbnail"
+                        onerror="this.src='https://placehold.co/800x500/111/444?text=911+GT3+RS'">
+                    <div class="thumbnail-overlay">
+                        <span class="thumbnail-btn">Configure in 3D →</span>
+                    </div>
+                </div>
+                <div class="viewer-container" id="viewer-car-3">
+                    <canvas class="viewer-canvas" aria-label="3D Model: Porsche 911 GT3 RS"></canvas>
+                    <div class="viewer-loading">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-bar">
+                            <div class="loading-bar-fill"></div>
+                        </div>
+                        <span class="loading-pct">0%</span>
+                    </div>
+                </div>
+                <div class="viewer-tooltip"></div>
+                <div class="part-info-panel">
+                    <div class="part-name">—</div>
+                    <div class="part-vertices">—</div>
+                    <div class="part-material">—</div>
+                </div>
+            </div>
+            <div class="card-info">
+                <div class="card-info-top">
+                    <h3 class="card-car-name">911 GT3 RS</h3>
+                    <p class="card-tagline">Born on the track.</p>
+                </div>
+                <div class="card-specs">
+                    <div class="card-spec"><strong>525</strong><span>hp</span></div>
+                    <div class="card-spec"><strong>3.2</strong><span>s</span></div>
+                    <div class="card-spec"><strong>296</strong><span>km/h</span></div>
+                </div>
+                <div class="card-actions">
+                    <button class="card-btn btn-rotate active" title="Toggle Auto Rotate">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 12a9 9 0 11-6.219-8.56" />
+                            <polyline points="21 3 21 9 15 9" />
+                        </svg>
+                    </button>
+                    <button class="card-btn btn-reset" title="Reset View">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="3" />
+                            <path d="M12 2v4m0 12v4M2 12h4m12 0h4" />
+                        </svg>
+                    </button>
+                    <button class="card-btn btn-fullscreen" title="Fullscreen">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="15 3 21 3 21 9" />
+                            <polyline points="9 21 3 21 3 15" />
+                            <line x1="21" y1="3" x2="14" y2="10" />
+                            <line x1="3" y1="21" x2="10" y2="14" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /explore-cards-grid -->
+</section>

@@ -1,0 +1,282 @@
+/* ══════════════════════════════════════════════════════════════
+   PORSCHE — Hero Section Styles
+   Video hero with cinematic reveal, tagline, and post-hero specs
+══════════════════════════════════════════════════════════════ */
+
+/* ── Hero Video Section ───────────────────────────────────── */
+#hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--black);
+}
+
+#hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+/* ── Lighting Layers ──────────────────────────────────────── */
+#headlight-bloom {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: radial-gradient(ellipse 45% 55% at 55% 50%,
+            rgba(210, 225, 255, 0.12) 0%,
+            rgba(190, 210, 255, 0.04) 40%,
+            transparent 70%);
+    opacity: 0;
+}
+
+#room-light {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background: radial-gradient(ellipse 80% 80% at 50% 30%,
+            rgba(255, 250, 240, 0.06) 0%,
+            transparent 70%);
+}
+
+#vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+/* ── Giant PORSCHE Text ───────────────────────────────────── */
+#porsche-text {
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    display: flex;
+    gap: 0;
+    user-select: none;
+    pointer-events: none;
+}
+
+#porsche-text .letter {
+    font-family: 'Outfit', 'Orbitron', sans-serif;
+    font-size: clamp(5rem, 14vw, 14rem);
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.04);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+#porsche-text .letter.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ── Tagline ──────────────────────────────────────────────── */
+#tagline {
+    position: absolute;
+    bottom: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    opacity: 0;
+    transition: opacity 0.8s ease 0.3s;
+}
+
+#tagline.visible {
+    opacity: 1;
+}
+
+#crest {
+    filter: drop-shadow(0 0 12px rgba(192, 57, 43, 0.4));
+}
+
+#tagline-text {
+    font-family: 'Barlow', sans-serif;
+    font-size: clamp(0.8rem, 1.1vw, 1rem);
+    font-weight: 300;
+    color: rgba(240, 237, 232, 0.65);
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+}
+
+#tagline-text .highlight {
+    color: var(--red);
+    font-weight: 600;
+}
+
+/* ── Globe Icon ───────────────────────────────────────────── */
+#globe-icon {
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    transform: translateY(-50%);
+    width: 60px;
+    height: 60px;
+    color: rgba(255, 255, 255, 0.06);
+    z-index: 5;
+    animation: globeSpin 20s linear infinite;
+}
+
+@keyframes globeSpin {
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}
+
+/* ── Bottom Bar ───────────────────────────────────────────── */
+#bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    padding: 1.2rem 5%;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* ── Progress Track ───────────────────────────────────────── */
+#progress-track {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.04);
+    z-index: 15;
+}
+
+#progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--red);
+    transition: width 0.3s ease;
+}
+
+/* ── Replay Button ────────────────────────────────────────── */
+#replay-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    padding: 0.8em 2em;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-pri);
+    background: rgba(192, 57, 43, 0.2);
+    border: 1px solid rgba(192, 57, 43, 0.5);
+    border-radius: 30px;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease, background 0.3s ease;
+}
+
+#replay-btn.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#replay-btn:hover {
+    background: rgba(192, 57, 43, 0.4);
+}
+
+/* ── Hero Post-Hero Specs ─────────────────────────────────── */
+#hero-after {
+    background: var(--surface);
+    padding: 8rem 7%;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.hero-specs-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 3.5rem;
+}
+
+.hero-specs-grid .spec-item {
+    padding: 2.5rem 2rem;
+    background: var(--matte);
+    border-top: 1px solid rgba(192, 57, 43, 0.12);
+    transition: background 0.35s ease;
+}
+
+.hero-specs-grid .spec-item:hover {
+    background: rgba(192, 57, 43, 0.04);
+}
+
+.spec-number {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(2rem, 3.2vw, 3rem);
+    font-weight: 900;
+    color: var(--text-pri);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 0.6rem;
+}
+
+.spec-unit {
+    font-size: 0.38em;
+    color: var(--red);
+    vertical-align: super;
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+.spec-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* ── Hero Mobile ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+    #porsche-text .letter {
+        font-size: clamp(3rem, 10vw, 6rem);
+    }
+
+    .hero-specs-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-specs-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    #hero-after {
+        padding: 5rem 5%;
+    }
+}

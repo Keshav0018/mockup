@@ -1,18 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Porsche — Engineering Emotion</title>
-  <meta name="description" content="Precision sculpted. Power unleashed. Experience the Porsche mechanical reveal — where scroll becomes the machine that builds." />
+  <title>Porsche — 911 Experience</title>
+  <meta name="description"
+    content="Porsche 911. Cinematic hero reveal, precision engineering assembly, and 3D interactive exploration." />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Barlow:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&family=Orbitron:wght@400;700;900&family=Barlow:ital,wght@0,200;0,300;0,400;0,500;0,600;1,300&display=swap"
+    rel="stylesheet" />
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="style.css" />
+  <!-- Shared Styles -->
+  <link rel="stylesheet" href="common.css" />
+
+  <!-- Import Map for Three.js ES Modules (used by explore section) -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
 </head>
 
 <body>
@@ -25,101 +39,39 @@
   <nav id="nav">
     <div id="logo">Porsche<span>.</span></div>
     <ul id="nav-links">
-      <li><a href="#" id="nav-models">Models</a></li>
-      <li><a href="#" id="nav-configure">Configure</a></li>
-      <li><a href="#" id="nav-experience">Experience</a></li>
-      <li><a href="#" id="nav-dealers">Dealers</a></li>
+      <li><a href="#hero" id="nav-hero">Home</a></li>
+      <li><a href="#scroll-track" id="nav-engineering">Engineering</a></li>
+      <li><a href="#explore-section" id="nav-models">Models</a></li>
+      <li><a href="configurator/index.html" id="nav-configure">Configure</a></li>
     </ul>
   </nav>
 
-  <!-- ─── HERO SCROLL TRACK (600vh) ──────────────────────────── -->
-  <div id="scroll-track">
-    <div id="stage">
+  <!-- ═══════════════════════════════════════════════════════════
+       MODULAR SECTIONS — loaded in order by section-loader.js
+       
+       To add a new section, create a folder (e.g. gallery/)
+       with gallery.html, gallery.css, gallery.js, then add
+       a new <div data-section="..."> line below.
+  ═══════════════════════════════════════════════════════════ -->
 
-      <!-- Atmospheric layers -->
-      <div id="grain"></div>
-      <div id="spotlight"></div>
-      <div id="haze"></div>
+  <!-- Section 1: Hero — cinematic video reveal -->
+  <div data-section="hero/hero.html" data-css="hero/hero.css" data-js="hero/hero.js"></div>
 
-      <!-- Light effects -->
-      <div id="headlight-glow"></div>
-      <div id="red-trace"></div>
+  <!-- Section 2: Engineering — scroll-driven assembly -->
+  <div data-section="engineering/engineering.html" data-css="engineering/engineering.css"
+    data-js="engineering/engineering.js"></div>
 
-      <!-- ── Assembly Filmstrip (Canvas = zero-flicker drawImage) ───── -->
-      <div id="car-canvas">
-        <canvas
-          id="car-frame"
-          aria-label="Porsche 911 Turbo S — mechanical assembly sequence from chassis to full reveal"
-          width="1280"
-          height="720"
-        ></canvas>
-      </div>
+  <!-- Section 3: Explore — 3D car showcase cards -->
+  <div data-section="explore/explore.html" data-css="explore/explore.css" data-js="explore/explore.js"
+    data-module="true"></div>
 
-      <!-- ── HUD UI ──────────────────────────────────────────── -->
-      <div id="assembly-status">
-        <div id="assembly-dot"></div>
-        <span id="assembly-text">Establishing environment</span>
-      </div>
+  <!-- ─── Shared Libraries ────────────────────────────────────── -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-      <div id="stage-label">
-        <strong id="stage-num">01</strong>
-        <span id="stage-name">Studio Active</span>
-      </div>
-
-      <!-- ── Typography ─────────────────────────────────────── -->
-      <div id="type-block">
-        <div id="eyebrow">Model Year 2025</div>
-        <h1 id="headline">
-          Engineering<span class="accent">Emotion.</span>
-        </h1>
-        <p id="subline">
-          Precision sculpted.<br />
-          Power unleashed.
-        </p>
-        <button id="cta" type="button" aria-label="Discover the Porsche Machine">
-          Discover the Machine
-          <span class="cta-arrow"></span>
-        </button>
-      </div>
-
-      <!-- ── Progress Bar ───────────────────────────────────── -->
-      <div id="progress-bar"></div>
-
-      <!-- ── Scroll Hint ────────────────────────────────────── -->
-      <div id="scroll-hint" aria-hidden="true">
-        <span>Scroll</span>
-        <div id="scroll-line"></div>
-      </div>
-
-    </div><!-- /stage -->
-  </div><!-- /scroll-track -->
-
-  <!-- ─── Post-Hero Specs ──────────────────────────────────────── -->
-  <section id="after-hero">
-    <p class="section-eyebrow">Technical Specifications</p>
-    <h2 class="section-title">911 Turbo S</h2>
-    <div class="specs-grid">
-      <div class="spec-item">
-        <div class="spec-number">650<span class="spec-unit">hp</span></div>
-        <div class="spec-label">Engine Output</div>
-      </div>
-      <div class="spec-item">
-        <div class="spec-number">2.7<span class="spec-unit">s</span></div>
-        <div class="spec-label">0 – 100 km/h</div>
-      </div>
-      <div class="spec-item">
-        <div class="spec-number">330<span class="spec-unit">km/h</span></div>
-        <div class="spec-label">Top Track Speed</div>
-      </div>
-      <div class="spec-item">
-        <div class="spec-number">3.7<span class="spec-unit">L</span></div>
-        <div class="spec-label">Twin-Turbo Flat-6</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── Script ──────────────────────────────────────────────── -->
-  <script src="hero.js"></script>
+  <!-- ─── Section Loader ──────────────────────────────────────── -->
+  <script src="section-loader.js"></script>
 
 </body>
+
 </html>

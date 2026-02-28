@@ -1,0 +1,15 @@
+{
+  "name": "mockup",
+  "version": "1.0.0",
+  "main": "hero.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "gltf-pipeline": "^4.3.0"
+  }
+}

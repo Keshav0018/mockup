@@ -1,0 +1,480 @@
+/* ══════════════════════════════════════════════════════════════
+   PORSCHE — Explore Section Styles
+   3D Interactive Car Showcase cards, viewers, and fullscreen mode
+══════════════════════════════════════════════════════════════ */
+
+#explore-section {
+    position: relative;
+    background: var(--black);
+    padding: 6rem 7% 8rem;
+    overflow: hidden;
+}
+
+#explore-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 50% 40% at 20% 0%, rgba(192, 57, 43, 0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 100%, rgba(230, 126, 34, 0.04) 0%, transparent 70%);
+}
+
+/* ── Header ───────────────────────────────────────────── */
+.explore-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.explore-header .section-title {
+    font-size: clamp(2.4rem, 5vw, 4.5rem);
+    margin-bottom: 1.2rem;
+}
+
+.explore-header .section-title .accent {
+    color: var(--red);
+}
+
+.explore-header .section-eyebrow {
+    justify-content: center;
+}
+
+.explore-subtitle {
+    font-family: 'Barlow', sans-serif;
+    font-size: clamp(0.82rem, 1.1vw, 1rem);
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 0.06em;
+    color: rgba(240, 237, 232, 0.4);
+    line-height: 1.7;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+/* ── Interaction Hint ─────────────────────────────────── */
+.explore-interaction-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-bottom: 3.5rem;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.hint-icon {
+    display: flex;
+    color: var(--red);
+    animation: hintPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+/* ── Cards Grid ───────────────────────────────────────── */
+.explore-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.8rem;
+    position: relative;
+    z-index: 2;
+}
+
+/* ── Explore Card ─────────────────────────────────────── */
+.explore-card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.explore-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(192, 57, 43, 0.08);
+}
+
+/* Card accent glow */
+.card-glow {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.explore-card:hover .card-glow {
+    opacity: 1;
+}
+
+/* ── Viewer Container ─────────────────────────────────── */
+.card-viewer-wrap {
+    position: relative;
+}
+
+.card-thumbnail-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    cursor: pointer;
+}
+
+.card-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.card-thumbnail-container:hover .card-thumbnail {
+    transform: scale(1.05);
+}
+
+.thumbnail-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.card-thumbnail-container:hover .thumbnail-overlay {
+    opacity: 1;
+}
+
+.thumbnail-btn {
+    padding: 0.8rem 1.5rem;
+    background: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 30px;
+    font-family: 'Barlow', sans-serif;
+    color: #fff;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+}
+
+.viewer-container {
+    display: none;
+    /* Hidden by default until fullscreen */
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: #0a0a0a;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    cursor: grab;
+}
+
+.viewer-container:active {
+    cursor: grabbing;
+}
+
+.viewer-canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+}
+
+/* ── Loading State ────────────────────────────────────── */
+.viewer-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(6px);
+    z-index: 10;
+    transition: opacity 0.5s ease;
+}
+
+.loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 2px solid rgba(192, 57, 43, 0.15);
+    border-top-color: var(--red);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-bar {
+    width: 120px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.loading-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--red), #e67e22);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.loading-pct {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+}
+
+/* ── Viewer Tooltip ───────────────────────────────────── */
+.viewer-tooltip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0.35em 0.8em;
+    background: rgba(7, 7, 7, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(192, 57, 43, 0.3);
+    border-radius: 6px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--text-pri);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 20;
+    white-space: nowrap;
+}
+
+/* ── Part Info Panel ──────────────────────────────────── */
+.part-info-panel {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    padding: 0.7em 1em;
+    background: rgba(7, 7, 7, 0.75);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    z-index: 15;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.part-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--text-pri);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.3em;
+    text-transform: uppercase;
+}
+
+.part-vertices,
+.part-material {
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.58rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+}
+
+/* ── Card Info ────────────────────────────────────────── */
+.card-info {
+    padding: 1.4rem 1.5rem 1.2rem;
+}
+
+.card-info-top {
+    margin-bottom: 1rem;
+}
+
+.card-car-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(0.95rem, 1.4vw, 1.2rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: var(--text-pri);
+    margin-bottom: 0.3rem;
+}
+
+.card-tagline {
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 0.06em;
+    color: rgba(240, 237, 232, 0.35);
+}
+
+/* ── Card Specs ───────────────────────────────────────── */
+.card-specs {
+    display: flex;
+    gap: 1.2rem;
+    margin-bottom: 1.1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.card-spec {
+    display: flex;
+    align-items: baseline;
+    gap: 0.2em;
+}
+
+.card-spec strong {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+    font-weight: 900;
+    color: var(--text-pri);
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+
+.card-spec span {
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--red);
+}
+
+/* ── Card Action Buttons ──────────────────────────────── */
+.card-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.card-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.card-btn:hover {
+    border-color: var(--red);
+    color: var(--red);
+    background: rgba(192, 57, 43, 0.08);
+}
+
+.card-btn.active {
+    border-color: rgba(192, 57, 43, 0.4);
+    color: var(--red);
+}
+
+/* ── Fullscreen Mode ──────────────────────────────────── */
+.explore-card.fullscreen {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    border-radius: 0;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    transform: none !important;
+}
+
+.explore-card.fullscreen .viewer-container {
+    aspect-ratio: unset;
+    flex: 1;
+    display: block;
+}
+
+.explore-card.fullscreen .card-thumbnail-container {
+    display: none;
+}
+
+.explore-card.fullscreen .card-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(7, 7, 7, 0.9) 0%, transparent 100%);
+    padding: 2rem 3rem;
+    z-index: 10;
+}
+
+.explore-card.fullscreen .card-glow {
+    display: none;
+}
+
+/* ── Explore Mobile ───────────────────────────────────── */
+@media (max-width: 768px) {
+    #explore-section {
+        padding: 4rem 5% 5rem;
+    }
+
+    .explore-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .explore-interaction-hint {
+        font-size: 0.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-specs {
+        gap: 0.8rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1100px) {
+    .explore-cards-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .explore-card:last-child {
+        grid-column: 1 / -1;
+        max-width: 50%;
+        margin: 0 auto;
+    }
+}

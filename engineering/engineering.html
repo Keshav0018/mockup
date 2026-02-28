@@ -1,0 +1,82 @@
+<!-- ─── Engineering Scroll Track Section ─────────────── -->
+<div id="scroll-track">
+    <div id="stage">
+
+        <!-- Atmospheric layers -->
+        <div id="grain"></div>
+        <div id="spotlight"></div>
+        <div id="haze"></div>
+
+        <!-- Light effects -->
+        <div id="headlight-glow"></div>
+        <div id="red-trace"></div>
+
+        <!-- ── Assembly Filmstrip (Canvas = zero-flicker drawImage) ───── -->
+        <div id="car-canvas">
+            <canvas id="car-frame"
+                aria-label="Porsche 911 Turbo S — mechanical assembly sequence from chassis to full reveal" width="1280"
+                height="720"></canvas>
+        </div>
+
+        <!-- ── HUD UI ──────────────────────────────────────────── -->
+        <div id="assembly-status">
+            <div id="assembly-dot"></div>
+            <span id="assembly-text">Establishing environment</span>
+        </div>
+
+        <div id="stage-label">
+            <strong id="stage-num">01</strong>
+            <span id="stage-name">Studio Active</span>
+        </div>
+
+        <!-- ── Typography ─────────────────────────────────────── -->
+        <div id="type-block">
+            <div id="eyebrow">Model Year 2025</div>
+            <h1 id="headline">
+                Engineering<span class="accent">Emotion.</span>
+            </h1>
+            <p id="subline">
+                Precision sculpted.<br />
+                Power unleashed.
+            </p>
+            <button id="cta" type="button" aria-label="Discover the Porsche Machine">
+                Discover the Machine
+                <span class="cta-arrow"></span>
+            </button>
+        </div>
+
+        <!-- ── Progress Bar ───────────────────────────────────── -->
+        <div id="progress-bar"></div>
+
+        <!-- ── Scroll Hint ────────────────────────────────────── -->
+        <div id="scroll-hint" aria-hidden="true">
+            <span>Scroll</span>
+            <div id="scroll-line"></div>
+        </div>
+
+    </div><!-- /stage -->
+</div><!-- /scroll-track -->
+
+<!-- ─── Post-Hero Specs ──────────────────────────────────────── -->
+<section id="after-hero">
+    <p class="section-eyebrow">Technical Specifications</p>
+    <h2 class="section-title">911 Turbo S</h2>
+    <div class="specs-grid">
+        <div class="spec-item">
+            <div class="spec-number">650<span class="spec-unit">hp</span></div>
+            <div class="spec-label">Engine Output</div>
+        </div>
+        <div class="spec-item">
+            <div class="spec-number">2.7<span class="spec-unit">s</span></div>
+            <div class="spec-label">0 – 100 km/h</div>
+        </div>
+        <div class="spec-item">
+            <div class="spec-number">330<span class="spec-unit">km/h</span></div>
+            <div class="spec-label">Top Track Speed</div>
+        </div>
+        <div class="spec-item">
+            <div class="spec-number">3.7<span class="spec-unit">L</span></div>
+            <div class="spec-label">Twin-Turbo Flat-6</div>
+        </div>
+    </div>
+</section>

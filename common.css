@@ -1,0 +1,160 @@
+/* ══════════════════════════════════════════════════════════════
+   PORSCHE — Common Styles
+   Shared reset, variables, fonts, cursor, and navigation
+══════════════════════════════════════════════════════════════ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --red: #c0392b;
+    --red-mid: rgba(192, 57, 43, 0.55);
+    --red-trace: rgba(192, 57, 43, 0.85);
+    --black: #070707;
+    --surface: #0e0e0f;
+    --matte: #111113;
+    --text-pri: #f0ede8;
+    --text-muted: #55555a;
+}
+
+/* ── Reset + Base ──────────────────────────────────────────── */
+html {
+    scroll-behavior: auto;
+}
+
+body {
+    background: var(--black);
+    color: var(--text-pri);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+}
+
+/* ── Custom Cursor ─────────────────────────────────────────── */
+#cursor {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--red);
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s ease, height 0.2s ease;
+    will-change: left, top;
+}
+
+#cursor-ring {
+    position: fixed;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(192, 57, 43, 0.45);
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: width 0.25s ease, height 0.25s ease;
+    will-change: left, top;
+}
+
+body:has(a:hover) #cursor-ring,
+body:has(button:hover) #cursor-ring {
+    width: 52px;
+    height: 52px;
+    border-color: rgba(192, 57, 43, 0.7);
+}
+
+/* ── Nav ───────────────────────────────────────────────────── */
+#nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 1.8rem 7%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(7, 7, 7, 0.8) 0%, transparent 100%);
+}
+
+#logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.35em;
+    color: var(--text-pri);
+    text-transform: uppercase;
+}
+
+#logo span {
+    color: var(--red);
+}
+
+#nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+}
+
+#nav-links a {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.25s ease;
+}
+
+#nav-links a:hover {
+    color: var(--text-pri);
+}
+
+/* ── Shared Components ─────────────────────────────────────── */
+.section-eyebrow {
+    font-size: 0.62rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.section-eyebrow::before {
+    content: '';
+    width: 22px;
+    height: 1px;
+    background: var(--red);
+    display: block;
+}
+
+.section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.8rem, 3vw, 3.2rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 0;
+}
+
+.accent {
+    color: var(--red);
+}
+
+/* ── Mobile Nav ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    #nav-links {
+        display: none;
+    }
+}
