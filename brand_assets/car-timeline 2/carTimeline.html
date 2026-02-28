@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Car Timeline — Standalone Demo</title>
+  <meta name="description" content="Scroll-driven cinematic Porsche evolution timeline." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&family=Barlow:wght@200;300;400;500;600&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="carTimeline.css" />
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 16px; overflow-x: hidden; }
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: #050505;
+      color: #f0efeb;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .demo-spacer {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .demo-spacer h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .demo-spacer p {
+      font-size: 13px;
+      font-weight: 300;
+      opacity: 0.4;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="demo-spacer">
+    <h1>Car Timeline Demo</h1>
+    <p>Scroll down to begin the cinematic experience</p>
+  </div>
+
+  <div id="carTimelineMount"></div>
+
+  <div class="demo-spacer">
+    <p>End of timeline — normal scrolling resumes</p>
+  </div>
+
+  <script src="carTimeline.js"></script>
+  <script>
+    new CarTimeline("carTimelineMount", "../brand_assets/timeline/", 160);
+  </script>
+</body>
+</html>

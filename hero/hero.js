@@ -1,12 +1,13 @@
 /* ══════════════════════════════════════════════════════════════
    PORSCHE — Hero Section Script
-   Video playback, letter animation, and replay logic
+   Video playback, animated title reveal, start sound, and replay
 ══════════════════════════════════════════════════════════════ */
 
 (function heroInit() {
     const video = document.getElementById('hero-video');
+    const porscheText = document.getElementById('porsche-text');
     const letters = document.querySelectorAll('#porsche-text .letter');
-    const tagline = document.getElementById('tagline');
+
     const progressFill = document.getElementById('progress-fill');
     const replayBtn = document.getElementById('replay-btn');
     const bloom = document.getElementById('headlight-bloom');
@@ -18,10 +19,24 @@
 
     console.log('[Hero] Initializing hero section...');
 
-    // ── Play video and animate letters ──────────────────
+    // ── Preload start sound ─────────────────────────────
+    const startSound = new Audio('brand_assets/start_sound.mp3');
+    startSound.preload = 'auto';
+    startSound.volume = 0.6;
+
+    let soundPlayed = false;
+    let lettersRevealed = false;
+    let titleSettled = false;
+
+    // ── Play hero sequence ──────────────────────────────
     function playHero() {
+        // Reset all state
+        soundPlayed = false;
+        lettersRevealed = false;
+        titleSettled = false;
+
         replayBtn.classList.remove('visible');
-        tagline.classList.remove('visible');
+        porscheText.classList.remove('settled');
         letters.forEach(l => l.classList.remove('visible'));
 
         video.currentTime = 0;
@@ -29,33 +44,48 @@
             console.warn('[Hero] Autoplay blocked — user interaction required.');
         });
 
-        // Stagger letter reveals at 30% through video
-        video.addEventListener('timeupdate', function onTime() {
-            const pct = video.currentTime / video.duration;
-
-            // Update progress bar
-            if (progressFill) {
-                progressFill.style.width = (pct * 100) + '%';
-            }
-
-            // Bloom headlight effect
-            if (bloom) {
-                bloom.style.opacity = pct > 0.4 ? Math.min(1, (pct - 0.4) * 3) : 0;
-            }
-
-            // Stagger letters at 30%
-            if (pct > 0.3) {
-                letters.forEach((letter, i) => {
-                    setTimeout(() => letter.classList.add('visible'), i * 80);
+        // Schedule start sound at 0.8 seconds
+        setTimeout(() => {
+            if (!soundPlayed) {
+                soundPlayed = true;
+                startSound.currentTime = 0;
+                startSound.play().catch(() => {
+                    console.warn('[Hero] Sound autoplay blocked.');
                 });
             }
-
-            // Show tagline at 70%
-            if (pct > 0.7 && tagline) {
-                tagline.classList.add('visible');
-            }
-        });
+        }, 800);
     }
+
+    // ── Time-based animation ────────────────────────────
+    video.addEventListener('timeupdate', function () {
+        const pct = video.duration ? video.currentTime / video.duration : 0;
+
+        // Update progress bar
+        if (progressFill) {
+            progressFill.style.width = (pct * 100) + '%';
+        }
+
+        // Bloom headlight effect
+        if (bloom) {
+            bloom.style.opacity = pct > 0.4 ? Math.min(1, (pct - 0.4) * 3) : 0;
+        }
+
+        // ── Phase 1: Letters appear (stagger) at 15% ──────
+        if (pct > 0.15 && !lettersRevealed) {
+            lettersRevealed = true;
+            letters.forEach((letter, i) => {
+                setTimeout(() => letter.classList.add('visible'), i * 100);
+            });
+        }
+
+        // ── Phase 2: Title slides up at 35% ───────────────
+        if (pct > 0.35 && !titleSettled) {
+            titleSettled = true;
+            porscheText.classList.add('settled');
+        }
+
+
+    });
 
     // ── On video end ────────────────────────────────────
     video.addEventListener('ended', () => {

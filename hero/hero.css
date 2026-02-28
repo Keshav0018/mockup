@@ -55,71 +55,44 @@
 /* ── Giant PORSCHE Text ───────────────────────────────────── */
 #porsche-text {
     position: absolute;
-    bottom: 20%;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
     z-index: 5;
     display: flex;
-    gap: 0;
+    gap: 0.04em;
     user-select: none;
     pointer-events: none;
+    transition: top 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: top, transform;
+}
+
+/* Final position — text sits clearly ABOVE the car */
+#porsche-text.settled {
+    top: 18%;
+    transform: translate(-50%, -50%);
 }
 
 #porsche-text .letter {
-    font-family: 'Outfit', 'Orbitron', sans-serif;
-    font-size: clamp(5rem, 14vw, 14rem);
-    font-weight: 900;
-    color: rgba(255, 255, 255, 0.04);
-    letter-spacing: 0.06em;
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(3rem, 6.5vw, 6.5rem);
+    font-weight: 800;
+    color: rgba(240, 240, 240, 0.9);
+    letter-spacing: 0.32em;
     text-transform: uppercase;
     line-height: 1;
     opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    transform: translateY(50px) scale(0.9);
+    transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 #porsche-text .letter.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 
-/* ── Tagline ──────────────────────────────────────────────── */
-#tagline {
-    position: absolute;
-    bottom: 8%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.8rem;
-    opacity: 0;
-    transition: opacity 0.8s ease 0.3s;
-}
 
-#tagline.visible {
-    opacity: 1;
-}
-
-#crest {
-    filter: drop-shadow(0 0 12px rgba(192, 57, 43, 0.4));
-}
-
-#tagline-text {
-    font-family: 'Barlow', sans-serif;
-    font-size: clamp(0.8rem, 1.1vw, 1rem);
-    font-weight: 300;
-    color: rgba(240, 237, 232, 0.65);
-    letter-spacing: 0.08em;
-    line-height: 1.8;
-}
-
-#tagline-text .highlight {
-    color: var(--red);
-    font-weight: 600;
-}
 
 /* ── Globe Icon ───────────────────────────────────────────── */
 #globe-icon {
@@ -263,7 +236,12 @@
 /* ── Hero Mobile ──────────────────────────────────────────── */
 @media (max-width: 768px) {
     #porsche-text .letter {
-        font-size: clamp(3rem, 10vw, 6rem);
+        font-size: clamp(2.5rem, 8vw, 5rem);
+        letter-spacing: 0.15em;
+    }
+
+    #porsche-text.settled {
+        top: 28%;
     }
 
     .hero-specs-grid {
