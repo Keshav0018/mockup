@@ -1,0 +1,531 @@
+/* ══════════════════════════════════════════════════════════════
+   PORSCHE — Engineering Emotion
+   style.css
+══════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red:        #c0392b;
+  --red-mid:    rgba(192, 57, 43, 0.55);
+  --red-trace:  rgba(192, 57, 43, 0.85);
+  --black:      #070707;
+  --surface:    #0e0e0f;
+  --matte:      #111113;
+  --text-pri:   #f0ede8;
+  --text-muted: #55555a;
+}
+
+/* ── Reset + Base ──────────────────────────────────────────── */
+html { scroll-behavior: auto; }
+
+body {
+  background: var(--black);
+  color: var(--text-pri);
+  font-family: 'Barlow', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── Custom Cursor ─────────────────────────────────────────── */
+#cursor {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s ease, height 0.2s ease;
+  will-change: left, top;
+}
+#cursor-ring {
+  position: fixed;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(192, 57, 43, 0.45);
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width 0.25s ease, height 0.25s ease;
+  will-change: left, top;
+}
+body:has(a:hover) #cursor-ring,
+body:has(button:hover) #cursor-ring {
+  width: 52px;
+  height: 52px;
+  border-color: rgba(192, 57, 43, 0.7);
+}
+
+/* ── Nav ───────────────────────────────────────────────────── */
+#nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.8rem 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(to bottom, rgba(7,7,7,0.8) 0%, transparent 100%);
+}
+#logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  color: var(--text-pri);
+  text-transform: uppercase;
+}
+#logo span { color: var(--red); }
+#nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+#nav-links a {
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.25s ease;
+}
+#nav-links a:hover { color: var(--text-pri); }
+
+/* ── Scroll Track ──────────────────────────────────────────── */
+#scroll-track {
+  height: 600vh;
+  position: relative;
+}
+
+/* ── Sticky Stage ──────────────────────────────────────────── */
+#stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: var(--black);
+}
+
+/* ── Environment Layers ────────────────────────────────────── */
+#grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 30;
+  opacity: 0.032;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  mix-blend-mode: overlay;
+}
+
+#spotlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background: radial-gradient(
+    ellipse 62% 65% at 56% 52%,
+    rgba(255, 250, 240, 0.06) 0%,
+    rgba(255, 250, 240, 0.018) 40%,
+    transparent 72%
+  );
+}
+
+#haze {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  background:
+    radial-gradient(ellipse 90% 38% at 50% 100%, rgba(5,4,4,0.9) 0%, transparent 80%),
+    radial-gradient(ellipse 40% 50% at 8% 50%, rgba(192,57,43,0.03) 0%, transparent 65%),
+    radial-gradient(ellipse 35% 55% at 92% 48%, rgba(192,57,43,0.015) 0%, transparent 60%);
+  opacity: 0;
+}
+
+/* ── Car Assembly Stage ────────────────────────────────────── */
+#car-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 3%;
+}
+
+#car-frame {
+  width: 76%;
+  max-width: 1080px;
+  height: auto;
+  display: block;
+  opacity: 0;
+  transform: translateY(24px) scale(0.968);
+  will-change: transform, opacity, filter;
+  transform-origin: center center;
+  user-select: none;
+  /* Canvas: JS drives every property, no CSS transition */
+}
+
+/* ── Red Accent Trace ──────────────────────────────────────── */
+#red-trace {
+  position: absolute;
+  bottom: 41%;
+  left: 14%;
+  right: 26%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--red-trace) 25%,
+    var(--red) 55%,
+    rgba(192,57,43,0.3) 80%,
+    transparent 100%
+  );
+  z-index: 20;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform, opacity;
+  filter: blur(0.4px);
+  box-shadow: 0 0 8px var(--red-mid), 0 0 2px var(--red);
+}
+
+/* ── Headlight Glow ────────────────────────────────────────── */
+#headlight-glow {
+  position: absolute;
+  right: 20%;
+  top: 50%;
+  transform: translateY(-52%);
+  width: 260px;
+  height: 140px;
+  background: radial-gradient(
+    ellipse at 65% 50%,
+    rgba(210, 225, 255, 0.18) 0%,
+    rgba(190, 210, 255, 0.06) 45%,
+    transparent 72%
+  );
+  z-index: 15;
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
+  filter: blur(3px);
+}
+
+/* ── Typography Block ──────────────────────────────────────── */
+#type-block {
+  position: absolute;
+  left: 7%;
+  top: 52%;
+  transform: translateY(-38%) translateY(28px);
+  z-index: 25;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+  max-width: 320px;
+}
+
+#eyebrow {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+#eyebrow::before {
+  content: '';
+  display: block;
+  width: 26px;
+  height: 1px;
+  background: var(--red);
+  flex-shrink: 0;
+}
+
+#headline {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(2.4rem, 4.8vw, 6rem);
+  font-weight: 900;
+  line-height: 0.90;
+  letter-spacing: -0.035em;
+  color: var(--text-pri);
+  text-transform: uppercase;
+  margin-bottom: 1.4rem;
+}
+#headline .accent {
+  display: block;
+  color: var(--red);
+}
+
+#subline {
+  font-family: 'Barlow', sans-serif;
+  font-size: clamp(0.76rem, 1vw, 0.92rem);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.09em;
+  color: rgba(240, 237, 232, 0.42);
+  line-height: 1.75;
+  margin-bottom: 2.6rem;
+}
+
+/* ── CTA Button ────────────────────────────────────────────── */
+#cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9em 2.1em;
+  border: 1px solid rgba(192, 57, 43, 0.5);
+  background: transparent;
+  color: var(--text-pri);
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  cursor: none;
+  position: relative;
+  overflow: hidden;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: auto;
+}
+#cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: -1;
+}
+#cta:hover::before { transform: scaleX(1); }
+#cta:hover {
+  border-color: var(--red);
+  box-shadow: 0 0 30px rgba(192, 57, 43, 0.45), 0 4px 16px rgba(0,0,0,0.7);
+  transform: translateY(-2px);
+}
+#cta:active { transform: translateY(0) scale(0.985); }
+
+.cta-arrow {
+  width: 16px;
+  height: 1px;
+  background: currentColor;
+  position: relative;
+  transition: width 0.3s ease;
+  flex-shrink: 0;
+}
+.cta-arrow::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  width: 5px;
+  height: 5px;
+  border-right: 1px solid currentColor;
+  border-top: 1px solid currentColor;
+}
+#cta:hover .cta-arrow { width: 22px; }
+
+/* ── HUD Elements ──────────────────────────────────────────── */
+#progress-bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  width: 0%;
+  background: linear-gradient(90deg, transparent, var(--red), rgba(192,57,43,0.4));
+  z-index: 40;
+  will-change: width;
+}
+
+#scroll-hint {
+  position: absolute;
+  bottom: 2.8rem;
+  right: 7%;
+  z-index: 35;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+}
+#scroll-hint span {
+  font-size: 0.58rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: 'Barlow', sans-serif;
+  font-weight: 500;
+}
+#scroll-line {
+  width: 1px;
+  height: 38px;
+  background: linear-gradient(to bottom, var(--red), transparent);
+  animation: scrollPulse 1.9s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.25; transform: scaleY(0.6); transform-origin: top; }
+  50%       { opacity: 1;    transform: scaleY(1);   transform-origin: top; }
+}
+
+#assembly-status {
+  position: absolute;
+  top: 5.8rem;
+  right: 7%;
+  z-index: 35;
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+#assembly-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--red);
+  animation: dotBlink 1.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes dotBlink {
+  0%, 100% { opacity: 0.2; }
+  50%       { opacity: 1; }
+}
+
+#stage-label {
+  position: absolute;
+  bottom: 2.8rem;
+  left: 7%;
+  z-index: 35;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.52rem;
+  letter-spacing: 0.22em;
+  color: var(--text-muted);
+  opacity: 0;
+}
+#stage-num {
+  font-size: 1.55rem;
+  font-weight: 900;
+  color: rgba(192, 57, 43, 0.22);
+  letter-spacing: -0.02em;
+  display: block;
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+
+/* ── After Hero ────────────────────────────────────────────── */
+#after-hero {
+  background: var(--surface);
+  padding: 8rem 7%;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+.section-eyebrow {
+  font-size: 0.62rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.section-eyebrow::before {
+  content: '';
+  width: 22px;
+  height: 1px;
+  background: var(--red);
+  display: block;
+}
+.section-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.8rem, 3vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  line-height: 1;
+  margin-bottom: 0;
+}
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  margin-top: 3.5rem;
+}
+.spec-item {
+  padding: 2.5rem 2rem;
+  background: var(--matte);
+  border-top: 1px solid rgba(192, 57, 43, 0.12);
+  transition: background 0.35s ease;
+}
+.spec-item:hover { background: rgba(192, 57, 43, 0.04); }
+.spec-number {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  font-weight: 900;
+  color: var(--text-pri);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 0.6rem;
+}
+.spec-unit {
+  font-size: 0.38em;
+  color: var(--red);
+  vertical-align: super;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.spec-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ── Mobile ────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  #nav-links { display: none; }
+
+  #car-canvas {
+    justify-content: center;
+    padding: 0;
+  }
+  #car-frame { width: 96%; }
+
+  #type-block {
+    left: 5%;
+    right: 5%;
+    top: auto;
+    bottom: 11%;
+    transform: none !important;
+    max-width: none;
+  }
+  #headline { font-size: clamp(1.9rem, 7.5vw, 3rem); }
+
+  #red-trace { left: 4%; right: 4%; }
+  #headlight-glow { right: 5%; width: 130px; height: 90px; }
+
+  .specs-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .specs-grid { grid-template-columns: 1fr 1fr; }
+  #after-hero { padding: 5rem 5%; }
+}
